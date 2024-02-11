@@ -51,4 +51,8 @@ public class StringService {
 
         return sum;
     }
+
+    public List<Integer> addInBatches(List<String> numberBatches) {
+        return numberBatches.stream().map(this::add).toList();
+    }
 }
