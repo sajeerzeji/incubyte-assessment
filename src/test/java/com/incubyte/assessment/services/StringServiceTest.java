@@ -56,4 +56,10 @@ public class StringServiceTest {
     void testNumbersSeparatedByCustomDelimiterAsAStringAsInputAndDelimiterIsNotProperlyDeclaredShouldReturnError() {
         assertThrows(IllegalArgumentException.class, () -> stringService.add("//1;2;3"));
     }
+
+    @Test
+    void testCommaSeparatedNumbersAlongWithNegativeNumbersInAStringAsInputShouldReturnError() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> stringService.add("1,-8,2,-1"));
+        assertEquals("Negative numbers not allowed -8, -1", exception.getMessage());
+    }
 }
