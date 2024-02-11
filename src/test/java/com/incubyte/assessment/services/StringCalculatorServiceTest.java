@@ -4,11 +4,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTimeout;
 
 @SpringBootTest
 public class StringCalculatorServiceTest {
@@ -76,5 +80,11 @@ public class StringCalculatorServiceTest {
         );
         List<Integer> expected = Arrays.asList(3, 6, 10, 15);
         assertEquals(expected, stringCalculatorService.addInBatches(input));
+    }
+
+    @Test
+    void testLargeInputPerformsEfficiently() {
+        String largeInput = IntStream.range(1, 1001).mapToObj(String::valueOf).collect(Collectors.joining(","));
+        assertTimeout(Duration.ofSeconds(1), () -> stringCalculatorService.add(largeInput));
     }
 }
