@@ -17,16 +17,18 @@ public class StringCalculatorService {
     @Autowired
     StringCalculatorValidator inputValidator;
 
+    // Method to perform string calculations
     public int add(String numbers) {
-        inputValidator.validateInput(numbers);
-        if (!StringUtils.hasText(numbers)) return 0;
+        inputValidator.validateInput(numbers); // Validating input is null or not, if null, it will throw an exception
+        if (!StringUtils.hasText(numbers)) return 0; // Validating input is empty or not, if yes, will return a zero
 
-        StringCalculatorInput stringCalculatorInput = StringCalculatorUtils.extractDelimiter(numbers);;
-        String delimiter = stringCalculatorInput.delimiter();
+        StringCalculatorInput stringCalculatorInput = StringCalculatorUtils.extractDelimiter(numbers);
+        String delimiter = stringCalculatorInput.delimiter(); // Extracting delimiter and modifies input string
         numbers = stringCalculatorInput.numbers();
         String[] numberStrings = numbers.split(delimiter);
 
         List<Integer> negativeNumbers = new ArrayList<>();
+        // Calculating the sum
         int sum = Arrays.stream(numberStrings)
                 .map(String::strip)
                 .filter(number -> {
@@ -51,6 +53,7 @@ public class StringCalculatorService {
         return sum;
     }
 
+    // Method to perform string calculations in batch
     public List<Integer> addInBatches(List<String> numberBatches) {
         return numberBatches.stream().map(this::add).toList();
     }
