@@ -31,4 +31,29 @@ public class StringServiceTest {
     void testNumbersSeparatedByNewLineAndCommasAsAStringAsInputShouldReturnTheSum() {
         assertEquals(6, stringService.add("1,2\n3"));
     }
+
+    @Test
+    void testNumbersSeparatedByNewLineAndCommasWithSpaceAsAStringAsInputShouldReturnTheSum() {
+        assertEquals(6, stringService.add("1, 2\n 3"));
+    }
+
+    @Test
+    void testNumbersSeparatedByCustomDelimiterAsAStringAsInputPrependedWithDelimiterShouldReturnTheSum() {
+        assertEquals(6, stringService.add("//;\n1;2;3"));
+    }
+
+    @Test
+    void testNumbersSeparatedByCustomDelimiterAsAStringAsInputAndDelimiterDeclareNotAtTheStartOfTheStringShouldReturnError() {
+        assertThrows(IllegalArgumentException.class, () -> stringService.add("1;2//;\n;3"));
+    }
+
+    @Test
+    void testNumbersSeparatedByCustomDelimiterAsAStringAsInputAndDelimiterIsNotDeclaredShouldReturnError() {
+        assertThrows(IllegalArgumentException.class, () -> stringService.add("1;2;3"));
+    }
+
+    @Test
+    void testNumbersSeparatedByCustomDelimiterAsAStringAsInputAndDelimiterIsNotProperlyDeclaredShouldReturnError() {
+        assertThrows(IllegalArgumentException.class, () -> stringService.add("//1;2;3"));
+    }
 }
