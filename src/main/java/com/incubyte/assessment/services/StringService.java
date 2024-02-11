@@ -1,40 +1,54 @@
 package com.incubyte.assessment.services;
 
+import com.incubyte.assessment.domain.model.StringInput;
+import com.incubyte.assessment.util.string.StringNumberOperationsUtils;
+import com.incubyte.assessment.util.validator.StringNumberOperationsInputValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 public class StringService {
-    public int add(String numbers) {
-        int sum = 0;
-        if (numbers == null) {
-            throw new IllegalArgumentException("Null input is not allowed");
-        } else if (StringUtils.hasText(numbers)) {
-            String delimiter = "[,\n]";
-            if (numbers.contains("//") && numbers.contains("\n") && numbers.indexOf("\n") > numbers.indexOf("//")) {
-                delimiter = numbers.substring(2, numbers.indexOf("\n"));
-                numbers = numbers.substring(numbers.indexOf("\n"));
-            }
-            List<String> list = Arrays.asList(numbers.split(delimiter));
-            List<String> negativeNumbersList = new ArrayList<>();
-            sum = list.stream().map(String::strip).filter(number -> {
-                if (number.matches("-?\\d+")) { // Checking if numeric or not
-                    if (Integer.parseInt(number) < 0) {
-                        negativeNumbersList.add(number);
-                    }
-                    return true;
-                } else
-                    throw new IllegalArgumentException("The input contains something more than number and delimiter");
-            }).mapToInt(Integer::parseInt).sum();
+    @Autowired
+    StringNumberOperationsInputValidator inputValidator;
 
-            if (!negativeNumbersList.isEmpty()) {
-                throw new IllegalArgumentException("Negative numbers not allowed " + String.join(", ", negativeNumbersList));
-            }
+    public int add(String numbers) {
+        inputValidator.validateInput(numbers);
+        if (!StringUtils.hasText(numbers)) return 0;
+
+        StringInput stringInput = StringNumberOperationsUtils.extractDelimiter(numbers);;
+        String delimiter = stringInput.delimiter();
+        numbers = stringInput.numbers();
+        String[] numberStrings = numbers.split(delimiter);
+
+        List<Integer> negativeNumbers = new ArrayList<>();
+        int sum = Arrays.stream(numberStrings)
+                .map(String::strip)
+                .filter(number -> {
+                    if (inputValidator.isNumeric(number)) {
+                        return true;
+                    } else {
+                        throw new IllegalArgumentException("Other characters found");
+                    }
+                })
+                .mapToInt(Integer::parseInt)
+                .peek(value -> {
+                    if (value < 0) {
+                        negativeNumbers.add(value);
+                    }
+                })
+                .sum();
+
+        if (!negativeNumbers.isEmpty()) {
+            throw new IllegalArgumentException("Negative numbers not allowed " + negativeNumbers.stream().map(String::valueOf).collect(Collectors.joining(", ")));
         }
+
         return sum;
     }
 }
