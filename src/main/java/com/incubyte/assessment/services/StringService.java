@@ -13,10 +13,10 @@ public class StringService {
         if (numbers == null) {
             throw new IllegalArgumentException("Null input is not allowed");
         } else if (StringUtils.hasText(numbers)) {
-            String delimiter = ",";
+            String delimiter = "[,\n]";
             List<String> list = Arrays.asList(numbers.split(delimiter));
             sum = list.stream().filter(number -> {
-                if (number.matches("\\d+"))
+                if (number.matches("\\d+")) // Checking if numeric or not
                     return true;
                 else
                     throw new IllegalArgumentException("The input contains something more than number and delimiter");

@@ -26,4 +26,9 @@ public class StringServiceTest {
     void testCommaSeparatedNumbersAndOtherElementsInAStringAsInputShouldReturnError() {
         assertThrows(IllegalArgumentException.class, () -> stringService.add("1,2,Hi"));
     }
+
+    @Test
+    void testNumbersSeparatedByNewLineAndCommasAsAStringAsInputShouldReturnTheSum() {
+        assertEquals(6, stringService.add("1,2\n3"));
+    }
 }
