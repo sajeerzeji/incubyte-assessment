@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import java.util.regex.Pattern;
 
 @Service
-public class StringNumberOperationsInputValidator {
+public class StringCalculatorValidator {
     public void validateInput(String numbers) {
         if (numbers == null) {
             throw new IllegalArgumentException("Input string cannot be null");

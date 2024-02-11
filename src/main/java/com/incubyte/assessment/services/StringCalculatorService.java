@@ -1,8 +1,8 @@
 package com.incubyte.assessment.services;
 
-import com.incubyte.assessment.domain.model.StringInput;
-import com.incubyte.assessment.util.string.StringNumberOperationsUtils;
-import com.incubyte.assessment.util.validator.StringNumberOperationsInputValidator;
+import com.incubyte.assessment.domain.model.StringCalculatorInput;
+import com.incubyte.assessment.util.string.StringCalculatorUtils;
+import com.incubyte.assessment.util.validator.StringCalculatorValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -10,21 +10,20 @@ import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
-public class StringService {
+public class StringCalculatorService {
     @Autowired
-    StringNumberOperationsInputValidator inputValidator;
+    StringCalculatorValidator inputValidator;
 
     public int add(String numbers) {
         inputValidator.validateInput(numbers);
         if (!StringUtils.hasText(numbers)) return 0;
 
-        StringInput stringInput = StringNumberOperationsUtils.extractDelimiter(numbers);;
-        String delimiter = stringInput.delimiter();
-        numbers = stringInput.numbers();
+        StringCalculatorInput stringCalculatorInput = StringCalculatorUtils.extractDelimiter(numbers);;
+        String delimiter = stringCalculatorInput.delimiter();
+        numbers = stringCalculatorInput.numbers();
         String[] numberStrings = numbers.split(delimiter);
 
         List<Integer> negativeNumbers = new ArrayList<>();
